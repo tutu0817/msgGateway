@@ -1,0 +1,14 @@
+package com.csair.fic.service.mysql;
+
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ */
+public interface SecPassengerT2MysqlService {
+
+    List<Map<String, Object>> queryDataCount(Map<String, Object> params);
+
+}

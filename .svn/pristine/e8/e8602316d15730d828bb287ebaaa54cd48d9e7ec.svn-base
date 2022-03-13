@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csair.fic.dao.oracle.mapper.SecPassengerT2Mapper">
+
+    <resultMap id="BaseResultMap" type="com.csair.fic.pojo.oracle.pojo.SecPassengerT2">
+            <result property="passengerid" column="PASSENGERID" jdbcType="DECIMAL"/>
+            <result property="flightno" column="FLIGHTNO" jdbcType="VARCHAR"/>
+            <result property="flightdate" column="FLIGHTDATE" jdbcType="CHAR"/>
+            <result property="enname" column="ENNAME" jdbcType="VARCHAR"/>
+            <result property="cnname" column="CNNAME" jdbcType="VARCHAR"/>
+            <result property="nationality" column="NATIONALITY" jdbcType="CHAR"/>
+            <result property="boardno" column="BOARDNO" jdbcType="DECIMAL"/>
+            <result property="seatno" column="SEATNO" jdbcType="VARCHAR"/>
+            <result property="origin" column="ORIGIN" jdbcType="CHAR"/>
+            <result property="certtype" column="CERTTYPE" jdbcType="CHAR"/>
+            <result property="certid" column="CERTID" jdbcType="VARCHAR"/>
+            <result property="checktime" column="CHECKTIME" jdbcType="TIMESTAMP"/>
+            <result property="checkresult" column="CHECKRESULT" jdbcType="VARCHAR"/>
+            <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+            <result property="passageno" column="PASSAGENO" jdbcType="VARCHAR"/>
+            <result property="checkgate" column="CHECKGATE" jdbcType="VARCHAR"/>
+            <result property="photopath" column="PHOTOPATH" jdbcType="VARCHAR"/>
+            <result property="createtime" column="CREATETIME" jdbcType="TIMESTAMP"/>
+            <result property="app1DownloadTime" column="APP1_DOWNLOAD_TIME" jdbcType="TIMESTAMP"/>
+            <result property="app2DownloadTime" column="APP2_DOWNLOAD_TIME" jdbcType="TIMESTAMP"/>
+            <result property="app1DownloadResult" column="APP1_DOWNLOAD_RESULT" jdbcType="DECIMAL"/>
+            <result property="app2DownloadResult" column="APP2_DOWNLOAD_RESULT" jdbcType="DECIMAL"/>
+            <result property="register" column="REGISTER" jdbcType="CHAR"/>
+            <result property="source" column="SOURCE" jdbcType="VARCHAR"/>
+            <result property="isDownloading" column="IS_DOWNLOADING" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        PASSENGERID,FLIGHTNO,FLIGHTDATE,
+        ENNAME,CNNAME,NATIONALITY,
+        BOARDNO,SEATNO,ORIGIN,
+        CERTTYPE,CERTID,CHECKTIME,
+        CHECKRESULT,REMARK,PASSAGENO,
+        CHECKGATE,PHOTOPATH,CREATETIME,
+        APP1_DOWNLOAD_TIME,APP2_DOWNLOAD_TIME,APP1_DOWNLOAD_RESULT,
+        APP2_DOWNLOAD_RESULT,REGISTER,SOURCE,
+        IS_DOWNLOADING
+    </sql>
+    <select id="queryOracle" resultType="java.util.Map">
+
+        SELECT
+        FLIGHTDATE AS schDepDt,
+        FLIGHTNO AS fltNr,
+        ORIGIN AS latestDepCd,
+        COUNT(CHECKRESULT) AS psgCnt
+        FROM
+        SEC_PASSENGER_T2
+        WHERE
+        FLIGHTDATE  <![CDATA[ >= ]]> #{schDepDtFrom}
+        AND FLIGHTDATE  <![CDATA[ <= ]]>  #{schDepDtTo}
+        AND
+        CHECKRESULT= 'Y'
+        <if test="FLIGHTNO!=null and FLIGHTNO!='' ">
+            AND FLIGHTNO =#{fltNr}
+        </if>
+        <if test="ORIGIN!=null and ORIGIN!='' ">
+            AND ORIGIN =#{latestDepCd}
+        </if>
+        GROUP BY FLIGHTDATE, FLIGHTNO,ORIGIN
+        ORDER BY
+        FLIGHTDATE DESC,FLIGHTNO ASC
+    </select>
+
+
+    <select id="findAll" resultType="com.csair.fic.pojo.oracle.pojo.SecPassengerT2">
+        select * from SEC_PASSENGER_T2
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+package com.csair.fic.mapper;
+
+import com.csair.fic.domain.pojo.oracle.SecPassengerT2;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+import java.util.Map;
+
+@Mapper
+public interface SecPassengerT2Mapper {
+
+    //int insert(SecPassengerT2 record);
+
+    //int insertSelective(SecPassengerT2 record);
+
+    List<Map<String, Object>> queryPKXSecCount(Map<String, Object> params);
+
+    List<Map<String, Object>> queryCANSecCount(Map<String, Object> params);
+
+    List<SecPassengerT2> findAllFromOracle();
+}

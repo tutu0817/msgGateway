@@ -1,0 +1,34 @@
+package com.csair.fic.service.oracle.impl;
+
+
+import com.csair.fic.dao.oracle.mapper.SecPassengerT2Mapper;
+import com.csair.fic.pojo.oracle.pojo.SecPassengerT2;
+import com.csair.fic.service.oracle.SecPassengerT2OracleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+*
+*/
+@Service("SecPassengerT2OracleService")
+public class SecPassengerT2OracleServiceImpl implements SecPassengerT2OracleService {
+
+    @Autowired
+    private SecPassengerT2Mapper secPassengerT2Mapper;
+
+
+    @Override
+    public List<Map<String, Object>> queryOracle(Map<String, Object> params) {
+        return secPassengerT2Mapper.queryOracle(params);
+    }
+
+    @Override
+    public List<SecPassengerT2> findAll() {
+        return secPassengerT2Mapper.findAll();
+    }
+}

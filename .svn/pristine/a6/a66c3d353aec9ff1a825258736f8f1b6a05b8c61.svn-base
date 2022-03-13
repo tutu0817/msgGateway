@@ -1,0 +1,37 @@
+package com.csair.fic.domain.response;
+
+/**
+ * @author ：wangxianlin
+ * @date ：Created in 2020/6/1 11:15
+ * @description：自定义异常
+ * @version: 1.0$
+ */
+public class FicResponseException extends RuntimeException {
+    
+    private static final long serialVersionUID = 4214651746776908835L;
+    //可以用来接受我们方法中传的参数
+    private String code;
+
+    public FicResponseException(){
+
+    }
+
+    public FicResponseException(FicResponseCode ficResponseCode) {
+        super(ficResponseCode.getMsg());
+        this.code = ficResponseCode.getCode();
+    }
+
+    public FicResponseException(FicResponseCode ficResponseCode, String detail) {
+        super(ficResponseCode.getMsg()+detail);
+        this.code = ficResponseCode.getCode();
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+}

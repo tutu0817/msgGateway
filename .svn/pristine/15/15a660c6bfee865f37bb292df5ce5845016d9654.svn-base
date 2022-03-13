@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csair.fic.dao.mysql.dao.SecPassengerT2Dao">
+  <resultMap id="BaseResultMap" type="com.csair.fic.pojo.mysql.pojo.SecPassengerT2">
+    <result column="PASSENGERID" jdbcType="INTEGER" property="passengerid" />
+    <result column="FLIGHTNO" jdbcType="VARCHAR" property="flightno" />
+    <result column="FLIGHTDATE" jdbcType="CHAR" property="flightdate" />
+    <result column="ENNAME" jdbcType="VARCHAR" property="enname" />
+    <result column="CNNAME" jdbcType="VARCHAR" property="cnname" />
+    <result column="NATIONALITY" jdbcType="CHAR" property="nationality" />
+    <result column="BOARDNO" jdbcType="INTEGER" property="boardno" />
+    <result column="SEATNO" jdbcType="VARCHAR" property="seatno" />
+    <result column="ORIGIN" jdbcType="CHAR" property="origin" />
+    <result column="CERTTYPE" jdbcType="CHAR" property="certtype" />
+    <result column="CERTID" jdbcType="VARCHAR" property="certid" />
+    <result column="CHECKTIME" jdbcType="TIMESTAMP" property="checktime" />
+    <result column="CHECKRESULT" jdbcType="VARCHAR" property="checkresult" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="PASSAGENO" jdbcType="VARCHAR" property="passageno" />
+    <result column="CHECKGATE" jdbcType="VARCHAR" property="checkgate" />
+    <result column="PHOTOPATH" jdbcType="VARCHAR" property="photopath" />
+    <result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="DOWNLOAD_TIME" jdbcType="TIMESTAMP" property="downloadTime" />
+    <result column="DOWNLOAD_RESULT" jdbcType="INTEGER" property="downloadResult" />
+    <result column="REGISTER" jdbcType="CHAR" property="register" />
+    <result column="SOURCE" jdbcType="VARCHAR" property="source" />
+  </resultMap>
+
+
+  <select id="findAll" resultType="com.csair.fic.pojo.mysql.pojo.SecPassengerT2">
+
+    select * from sec_passenger_t2;
+  </select>
+
+  <!--查询方法描述-->
+  <select id="queryDataCount" parameterType="java.util.Map" resultType="java.util.Map">
+
+<!--    SELECT-->
+<!--    `FLIGHTDATE` AS schDepDt,-->
+<!--    `FLIGHTNO` AS fltNr,-->
+<!--    MAX(ORIGIN) AS latestDepCd,-->
+<!--    COUNT(*) AS psgCnt-->
+<!--    FROM sec_passenger_t2-->
+<!--    WHERE-->
+<!--    FLIGHTDATE  <![CDATA[ >= ]]> #{schDepDtFrom}-->
+<!--    AND FLIGHTDATE  <![CDATA[ <= ]]>  #{schDepDtTo}-->
+<!--    AND CHECKRESULT= 'Y'-->
+<!--    <if test="FLIGHTNO!=null and FLIGHTNO!='' ">-->
+<!--      AND FLIGHTNO =#{fltNr}-->
+<!--    </if>-->
+<!--    <if test="ORIGIN!=null and ORIGIN!='' ">-->
+<!--      AND ORIGIN =#{latestDepCd}-->
+<!--    </if>-->
+<!--    &#45;&#45; AND `FLIGHTNO` = 'CZ3441'-->
+<!--    &#45;&#45; AND ORIGIN = 'CAN'-->
+<!--    GROUP BY `FLIGHTDATE`, FLIGHTNO-->
+<!--    ORDER BY  `FLIGHTDATE` DESC,`FLIGHTNO` ASC-->
+
+
+
+
+
+    <!--SELECT schDepDt,
+    fltNr,
+    latestDepCd,
+    psgCnt
+    FROM (
+    SELECT FLIGHTDATE AS schDepDt,
+    FLIGHTNO AS fltNr,
+    CREATETIME AS latestDepCd,
+    COUNT(*) AS psgCnt
+    FROM sec_passenger_t2
+    WHERE CHECKRESULT = 'Y'
+    GROUP BY FLIGHTNO
+    ) AS nres
+    WHERE
+    FLIGHTDATE  <![CDATA[ >= ]]> #{schDepDtFrom}
+    AND FLIGHTDATE  <![CDATA[ <= ]]>  #{schDepDtTo}
+    <if test="FLIGHTNO!=null and FLIGHTNO!='' ">
+      AND FLIGHTNO =#{fltNr}
+    </if>
+    <if test="ORIGIN!=null and ORIGIN!='' ">
+      AND ORIGIN =#{latestDepCd}
+    </if>-->
+
+
+
+    SELECT
+    `FLIGHTDATE` AS schDepDt,
+    `FLIGHTNO` AS fltNr,
+    `ORIGIN` AS latestDepCd,
+    COUNT(CHECKRESULT) AS psgCnt
+    FROM
+    sec_passenger_t2
+    WHERE
+    FLIGHTDATE  <![CDATA[ >= ]]> #{schDepDtFrom}
+    AND FLIGHTDATE  <![CDATA[ <= ]]>  #{schDepDtTo}
+    AND
+    CHECKRESULT= 'Y'
+    <if test="FLIGHTNO!=null and FLIGHTNO!='' ">
+      AND FLIGHTNO =#{fltNr}
+    </if>
+    <if test="ORIGIN!=null and ORIGIN!='' ">
+      AND ORIGIN =#{latestDepCd}
+    </if>
+    GROUP BY `FLIGHTDATE`, `FLIGHTNO`,ORIGIN
+    ORDER BY
+    `FLIGHTDATE` DESC,`FLIGHTNO` ASC
+  </select>
+</mapper>

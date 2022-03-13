@@ -1,0 +1,89 @@
+package com.csair.fic.interceptor;
+
+import com.alibaba.fastjson.JSONObject;
+import com.csair.fic.domain.vo.JFLogBean;
+import com.csair.fic.common.util.ApiHttpUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import java.util.UUID;
+
+/**
+ * 计费系统本地日志V0
+ * 请求记录拦截器，记录通过api网关请求 apiName,appid,clientip等信息
+ * @Author: zhouguanxiong
+ * @Date: 2021/12/28/9:55
+ */
+@Slf4j
+@Component
+public class RequestInterceptor implements HandlerInterceptor {
+
+    private Logger billLog = LoggerFactory.getLogger("billing_log");
+
+    private final static String checkHealthURI = "/checkHealth";
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.info("请求处理拦截器---------前置处理");
+        long start_time = System.currentTimeMillis();
+
+        String requestURI = request.getRequestURI();
+        if (requestURI.indexOf(checkHealthURI) < 0) {
+            String apiName = ApiHttpUtils.getCaApiName(request);
+            String appId = ApiHttpUtils.getCaAppID(request);
+            String clientIp = ApiHttpUtils.getCaClientIp(request);
+            log.info("fic api gateway info:apiName={},requestURI={},appId={},clientIp={}", apiName, requestURI, appId, clientIp);
+        }
+        String rsys = request.getHeader("RSYS");
+        String rmu = request.getHeader("RMU");
+        String rid = request.getHeader("RID");
+        if (StringUtils.isBlank(rsys) ||
+                StringUtils.isBlank(rmu) ||
+                StringUtils.isBlank(rid)) {
+            log.error("请求头参数RSYS/RMU/RID不能为空");
+            JSONObject result = new JSONObject();
+            result.put("code", 405);
+            result.put("data", "请求已被拦截");
+            result.put("msg", "请求头参数RSYS/RMU/RID不能为空");
+            response.setContentType("application/json;charset=utf-8");
+            response.getWriter().println(result.toJSONString());
+            return false;
+        }
+        request.setAttribute("start_time", start_time);
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        log.info("请求处理拦截器---------后置处理");
+
+        String requestURI = request.getRequestURI();
+        String apiName = ApiHttpUtils.getCaApiName(request);
+        /**排查掉健康检查URI*/
+        if (requestURI.indexOf(checkHealthURI) < 0) {
+            JFLogBean jfLog = new JFLogBean();
+            jfLog.setRsys(request.getHeader("RSYS"));
+            jfLog.setRmu(request.getHeader("RMU"));
+            jfLog.setRid(request.getHeader("RID"));
+            jfLog.setFlag("T");
+            String sid = UUID.randomUUID().toString().replaceAll("-", "");
+            jfLog.setSid(sid);
+            jfLog.setStart(new Timestamp((long) (request.getAttribute("start_time"))));
+            jfLog.setEnd(new Timestamp(System.currentTimeMillis()));
+            if (StringUtils.isNotBlank(apiName)) {
+                jfLog.setApicode("FIC_" + apiName);
+            } else {
+                jfLog.setApicode("FIC" + requestURI.replace("/", "_"));
+            }
+            billLog.info(jfLog.toJson());
+        }
+    }
+}

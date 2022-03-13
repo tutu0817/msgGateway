@@ -1,0 +1,75 @@
+package com.csair.fic.controller;
+
+import com.csair.fic.domain.pojo.SeatChartParam;
+import com.csair.fic.domain.response.FicResponse;
+import com.csair.fic.domain.response.FicResponseCode;
+import com.csair.fic.domain.vo.SeatChartVo;
+import com.travelsky.hub.model.input.SeatChartQueryBean;
+import com.travelsky.hub.model.output.SeatChartResultBean;
+import com.travelsky.hub.svc.ICheckInService;
+import com.travelsky.hub.util.HubServiceException;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 离岗座位图控制器
+ * @Author: zhougx
+ * @Date: 2021/12/02/9:26
+ */
+
+@RestController
+@Slf4j
+public class SeatChartController {
+
+	@Autowired
+	private ICheckInService peCheckInService;
+
+
+	/**
+	 * 离岗座位图查询
+	 * @param bean
+	 * @return
+	 */
+	@PostMapping("/query/seat/chart")
+	public FicResponse<SeatChartVo> querySeatChart(@RequestBody SeatChartParam bean) throws HubServiceException {
+		try {        	
+			// 参数校验
+			if (StringUtils.isBlank(bean.getFltNo()) ||
+					StringUtils.isBlank(bean.getFltDate()) ||
+					StringUtils.isBlank(bean.getOrigin()) ||
+					StringUtils.isBlank(bean.getDestination()))
+			{
+				log.info("入参存在空值，请检查参数");
+				return new FicResponse(FicResponseCode.CALL_FAIL, "入参存在空值，请检查参数.");
+			}else {
+				SeatChartVo seatChartVo = new SeatChartVo();
+				SeatChartQueryBean seatChartQueryBean = new SeatChartQueryBean();
+				seatChartQueryBean.setFlightNo(bean.getFltNo());
+				seatChartQueryBean.setFlightDate(bean.getFltDate());
+				seatChartQueryBean.setFromCity(bean.getOrigin());
+				seatChartQueryBean.setToCity(bean.getDestination());
+				if(StringUtils.isNotBlank(bean.getCabin())) {
+					seatChartQueryBean.setFlightClass(bean.getCabin());
+				}else {
+					seatChartQueryBean.setFlightClass("*");
+				}
+				SeatChartResultBean seatChartResult = peCheckInService.querySeatChart(seatChartQueryBean);
+				if(seatChartResult != null) {
+					seatChartVo.setSeatChart(seatChartResult.getOriginalSeatMap());
+					seatChartVo.setAircraftType(seatChartResult.getPlaneType());
+				}
+				return new FicResponse(FicResponseCode.CALL_SUCCESS, seatChartVo);
+			}
+
+		} catch (RuntimeException e) {
+			log.error("调用PE接口获取座位图失败：{}", e.getMessage());
+			return new FicResponse(FicResponseCode.CALL_FAIL, "调用PE接口获取座位图失败.");
+		}
+
+	}
+}

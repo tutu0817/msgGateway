@@ -1,0 +1,74 @@
+package com.csair.fic.domain.bean;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.Timestamp;
+
+@Data
+public class JFLogBean implements Serializable {
+
+	/**
+	 * 请求方系统标识，参考IT运营管理平台上的子产品代码
+	 */
+	String rsys = "FIC";
+	/**
+	 * 请求方模块标识，项目组自定义
+	 */
+	String rmu = "FIC";
+	/**
+	 * 请求方调用ID，唯一标识
+	 */
+	String rid;
+
+	/**
+	 * 请求方用户标识，目前暂无
+	 */
+	String user;
+
+	/**
+	 * 请求方用户单位模块标识，目前暂无
+	 */
+	String dep;
+
+	/**
+	 * 服务方响应ID，唯一标识
+	 */
+	String sid;
+
+	/**
+	 * 是否计费，默认计费
+	 */
+	String flag = "T";
+
+	/**
+	 * 请求开始时间戳
+	 */
+	Timestamp start;
+
+	/**
+	 * 响应完成时间戳
+	 */
+	Timestamp end;
+
+	/**
+	 * 中台接口系统代码
+	 */
+	String apicode;
+	
+	public JFLogBean() {
+		this.start = new Timestamp(System.currentTimeMillis());
+	}
+
+	public String toJson() throws IOException {
+		ObjectMapper objectMapper=new ObjectMapper();
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		String result = objectMapper.writeValueAsString(this);
+		return result;
+	}
+}

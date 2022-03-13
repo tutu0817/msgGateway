@@ -1,0 +1,253 @@
+package com.csair.fic.common.util;
+
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+@Slf4j
+public class DateTimeUtil {
+    
+    /**
+     * Date转yyyy-MM-dd
+     * @param date
+     * @return
+     */
+    public static String dateToCnDateStr(Date date) {
+        return formatDateToStr(date, "yyyy-MM-dd");
+    }
+    
+    /**
+     * Date转yyyy-MM-dd HH:mm:ss
+     * @param date
+     * @return
+     */
+    public static String dateToCnDateTimeStr(Date date) {
+        return formatDateToStr(date, "yyyy-MM-dd HH:mm:ss");
+    }
+
+    /**
+     * 将输入的时间转化成字符串. 字符串的格式为: yyyyMMddHHmmss
+     * @param date 日期
+     * @return String
+     */
+    public static String formatDateToStr(Date date) {
+        return formatDateToStr(date, "yyyyMMddHHmmssSSS");
+    }
+
+    /**
+     * 字符串转时间类型 String： yyyy-MM-dd或yyyy-MM-dd HH:mm:ss 转 Date： yyyy-MM-dd
+     * @param dateString: 时间字符串
+     * @return Date:
+     */
+    public static Date cnFormatToDate(String dateString) {
+        return strFormatToDate(dateString, "yyyy-MM-dd");
+    }
+
+    /**
+     * 字符串转时间类型 String：yyyy-MM-dd HH:mm:ss 转 Date yyyy-MM-dd HH:mm:ss
+     * @param dateString: 时间字符串
+     * @return Date:
+     */
+    public static Date cnFormatToDateTimeLimit(String dateString) {
+        return strFormatToDate(dateString, "yyyy-MM-dd HH:mm:ss");
+    }
+
+    /**
+     * 字符串转时间类型 String：yyyy-MM-dd HHmm 转 Date yyyy-MM-dd HHmm
+     * @param dateString: 时间字符串
+     * @return Date:
+     */
+    public static Date parseDateFormat(String dateString) {
+        return strFormatToDate(dateString, "yyyy-MM-dd HHmm");
+    }
+
+
+    /**
+     * String: yyyy-MM-dd HH:mm:ss转Timestamp
+     * @param dateString : 时间字符串
+     * @return : Timestamp
+     */
+    public static Timestamp stringToTimestamp(String dateString) {
+        Date dd = strFormatToDate(dateString, "yyyy-MM-dd HH:mm:ss");
+        if (dd != null) {
+            return new Timestamp(dd.getTime());
+        } else {
+            return null;
+        }
+    }
+
+    public static Timestamp formatToTimestamp(String dateString) {
+        Date dd = strFormatToDate(dateString, "yyyyMMddHHmmss");
+        if (dd != null) {
+            return new Timestamp(dd.getTime());
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * String: yyyy-MM-dd HH:mm:ss转String: yyyy-MM-dd
+     * @param str
+     * @return
+     */
+    public static String strToCnDateStr(String str)  {
+        return dateToCnDateStr(cnFormatToDate(str));
+    }
+
+    /**
+     * String: yyMMdd 转String: yyyyMMdd
+     * @param str
+     * @return
+     */
+    public static String strToDateStr(String str)  {
+        return DateTimeUtil.formatDateToStr(DateTimeUtil.strFormatToDate(str, "yyMMdd"), "yyyyMMdd");
+    }
+
+    /**
+     * String: yyyyMMdd 转String: yyyy-MM-dd
+     * @param str
+     * @return
+     */
+    public static String strTostr(String str)  {
+        return DateTimeUtil.formatDateToStr(DateTimeUtil.strFormatToDate(str, "yyyyMMdd"), "yyyy-MM-dd");
+    }
+    
+    /**
+     * String: yyyyMMdd 转String: yyyy-MM-dd
+     * @param str
+     * @return
+     */
+    public static String strTostrDate(String str)  {
+    	Date dateTime = DateTimeUtil.strFormatToDate(str, "yyyy-MM-dd");
+        return DateTimeUtil.formatDateToStr(dateTime, "yyyyMMdd");
+    }
+    
+    /**
+     * 字符串yyyy-MM-dd转化为字符串07SEP10
+     * @param str: 时间字符串
+     * @return String:
+     */
+    public static String strToYear(String str) {
+        SimpleDateFormat f = new SimpleDateFormat("ddMMMyy", Locale.US);
+        f.setLenient(false);
+        return f.format(cnFormatToDate(str)).toUpperCase();
+    }
+
+    /**
+     * 2021-09-10 to 210910
+     * @param str :
+     * @return : String
+     */
+    public static String stringToString(String str) {
+        String result = null;
+        try {
+            if (str != null && !"".equals(str)) {
+                result = str.replace("-", "").substring(2);
+            }
+        } catch (Exception e) {
+            log.error("日期转化出错", e);
+        }
+        return result;
+    }
+    
+    /**
+     * Date转为指定格式字符串
+     * @param date
+     * @param format 转换格式
+     * @return
+     */
+    public static String formatDateToStr(Date date, String format) {
+        String returnStr = "";
+        if (date != null) {
+            try {
+                SimpleDateFormat f = new SimpleDateFormat(format);
+                f.setLenient(false);
+                returnStr = f.format(date);
+            } catch (Exception e) {
+                log.error("", e);
+            }
+        }
+        return returnStr;
+    }
+
+    /**
+     * 字符串转时间类型
+     * @author: ShenHongSheng
+     * @date: 2021/5/26
+     * @param dateString: 时间字符串
+     * @return Date:
+     */
+    public static Date strFormatToDate(String dateString, String format) {
+        Date date = null;
+        if (StringUtils.isNotBlank(dateString)) {
+            SimpleDateFormat f = new SimpleDateFormat(format);
+            f.setLenient(false);
+            try {
+                date = f.parse(dateString);
+            } catch (ParseException ex) {
+                log.error("日期格式不对", ex);
+            }
+        }
+        return date;
+    }
+
+    /**
+     * 截取安检时间后面的时分秒
+     * @param time
+     * @return
+     */
+    public static String cutSecTime(String time) {
+        if (StringUtils.isNotBlank(time)) {
+            int idx = time.indexOf(":");
+            if (idx > 2) {
+                time = time.substring(idx - 2);
+            }
+        }
+        return time;
+    }
+
+    /**
+     * 获取date的前30分钟
+     * @author : ShenHongSheng
+     * @date : 2021/7/7 10:21
+     * @param date :
+     * @return : String
+     */
+    public static String getMinuteAgoTime(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, -30);// 30分钟前
+        //获取到完整的时间
+        return dateToCnDateTimeStr(calendar.getTime());
+    }
+
+    /**
+     * 将系统的当前时间转化成字符串. 字符串的格式为: yyyyMMddHHmmss
+     * @return String
+     */
+    public static String formatToString(Date date) {
+        return formatDateToStr(date, "yyyyMMddHHmmss");
+    }
+
+    /**
+     * 获取时间毫秒数
+     * @return String
+     */
+    public static Long parseToDateTime() {
+        return cnFormatToDateTimeLimit(dateToCnDateTimeStr(new Date())).getTime();
+    }
+
+    /**
+     * 将间转化成字符串. 字符串的格式为: HH:mm
+     * @return String
+     */
+    public static String dateToString(String dateStr) {
+        return formatDateToStr(cnFormatToDateTimeLimit(dateStr), "HH:mm");
+    }
+}

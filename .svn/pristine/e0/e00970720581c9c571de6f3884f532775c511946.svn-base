@@ -1,0 +1,16 @@
+package com.csair.fic.domain.vo;
+import lombok.Data;
+
+@Data
+public class SeatChartVo {
+	/**
+     * 座位图
+     */
+    private String seatChart;
+
+    /**
+     * 机型
+     */
+    private String aircraftType;
+
+}

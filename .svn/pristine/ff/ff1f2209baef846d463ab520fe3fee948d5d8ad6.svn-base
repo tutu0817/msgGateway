@@ -1,0 +1,58 @@
+package com.csair.fic.controller;
+
+import com.csair.fic.common.util.DateTimeUtil;
+import com.csair.fic.domain.response.FicResponse;
+import com.csair.fic.domain.response.FicResponseCode;
+import com.csair.fic.domain.vo.BdPsgVo;
+import com.csair.fic.openfeign.IFicService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+/**
+ *
+ * @Author
+ * @Date: 2022/02/23/10:30
+ */
+@RestController
+@Slf4j
+public class FicController {
+
+    @Autowired
+    private IFicService ficService;
+
+    /**
+     * 获取广州/大兴/南阳已登机旅客名单
+     */
+    @PostMapping("/query/boarding/passenger")
+    public FicResponse<BdPsgVo> queryBdPsg(@RequestBody Map<String, String> params) {
+        try {
+            // 参数校验
+            if (StringUtils.isBlank(params.get("fltNr"))) {
+                log.info("航班号fltNr为空，请检查参数");
+                throw new RuntimeException("航班号fltNr为空，请检查参数");
+            }
+            if (StringUtils.isBlank(params.get("fltDate"))) {
+                log.info("航班日期fltDate为空，请检查参数");
+                throw new RuntimeException("航班日期fltDate为空，请检查参数");
+            } else {
+                String fltDate = DateTimeUtil.strTostr(params.get("fltDate"));
+                params.put("fltDate", fltDate);
+            }
+            if (StringUtils.isBlank(params.get("airport"))) {
+                log.info("出发站airport为空，请检查参数");
+                throw new RuntimeException("出发站airport为空，请检查参数");
+            }
+
+            return new FicResponse(FicResponseCode.CALL_SUCCESS, ficService.queryFicBdPsg(params));
+        } catch (RuntimeException e) {
+            log.error("获取已登机旅客名单接口调用失败！", e.getMessage());
+            return new FicResponse(FicResponseCode.CALL_FAIL, "获取已登机旅客名单接口调用失败！");
+        }
+    }
+}

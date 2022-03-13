@@ -1,0 +1,25 @@
+package com.csair.fic.openfeign;
+
+import com.csair.fic.common.constant.ServiceConstant;
+import com.csair.fic.domain.vo.BdPsgVo;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @Author: ZGX
+ * @Date: 2022/02/25/17:12
+ */
+@FeignClient(name = ServiceConstant.BISE_SHELL_SERVICE, url = "${BISE.FIC.service_url}")
+public interface IFicService {
+    /**
+     * 获取广州/大兴/南阳已登机旅客名单
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/query/boarding/passenger")
+    List<BdPsgVo> queryFicBdPsg(@RequestBody Map<String, String> params);
+}

@@ -1,0 +1,21 @@
+server:
+  port: 8902
+spring:
+  application:
+    name: fic-demo
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        group: fic
+        namespace: e37ace26-d931-44dd-86ab-fc7a86c05940
+      config:
+        server-addr: 127.0.0.1:8848
+        prefix: ${spring.application.name}
+        file-extension: yaml
+        group: fic
+        namespace: e37ace26-d931-44dd-86ab-fc7a86c05940
+banner:
+  charset: UTF-8

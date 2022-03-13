@@ -1,0 +1,52 @@
+
+package com.csair.fic.controller;
+import com.csair.fic.domain.response.FicResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author ：wangxianlin
+ * @date ：Created in 2020/6/1 11:12
+ * @description：捕获自定义异常
+ * @version: 1.0$
+ */
+
+@ControllerAdvice
+public class ExceptionController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
+
+    @ExceptionHandler(FicResponseException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    //在这个方法里定义我们需要返回的格式
+    public Map<String, Object> handleFicResponseException(FicResponseException ex) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("ficResponseCode", ex.getCode());
+        result.put("ficResponseMessage", ex.getMessage());
+        return result;
+    }
+
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    //在这个方法里定义我们需要返回的格式
+    public Map<String, Object> handleFicResponseException(HttpMessageNotReadableException ex) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("ficResponseCode", "02");
+        result.put("ficResponseMessage", "请求参数不合法！"+ex);
+        logger.error("异常：",ex);
+        return result;
+    }
+
+}

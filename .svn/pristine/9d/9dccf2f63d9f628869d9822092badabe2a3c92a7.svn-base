@@ -1,0 +1,99 @@
+server:
+  port: 8902
+  servlet:
+    context-path: /dcsCenter
+
+
+#第一个数据库链接对象
+spring:
+  datasource:
+    oracle:
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      jdbc-url: jdbc:oracle:thin:@10.79.8.150:1521/ECI
+      username: eci
+      password: PCSSadmin_2020
+    mysql:
+      #  com.mysql.cj.jdbc.Driver 8之上的连接
+      #  com.mysql.jdbc.Driver  8之下的连接
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://10.79.158.35:3306/bise?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+      username: bise_app
+      password: bisE_App*2020
+
+
+#spring:
+#  datasource:
+#    primary:
+#      url: jdbc:mysql://127.0.0.1:3306/eci?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+#      username: root
+#      password: 12345678
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#    secondary:
+#      username: root
+#      password: root
+#      jdbc-url: jdbc:oracle:thin:@127.0.0.1:1521:ECI
+#      driver-class-name: oracle.jdbc.OracleDriver
+
+
+#      type: com.zaxxer.hikari.HikariDataSource
+#      max-active: 50
+#      min-idle: 10
+#      max-wait: 10000
+#      time-between-eviction-runs-millis: 60000
+#      min-evictable-idle-time-millis: 30000
+#      validation-query: select 'x' FROM DUAL
+#      test-on-borrow: false
+#      test-on-return: false
+#      test-while-idle: true
+#      pool-prepared-statements: true
+#      max-open-prepared-statements: 20
+#        filter:
+#          stat:
+#            enabled: true
+#            log-slow-sql: true
+#            slow-sql-millis: 10000
+#            db-type: mysql
+#      # 第二个Oracle数据源
+#      core:
+#        jdbc-url: jdbc:oracle:thin:@127.0.0.1:1521:test2
+#        username: root
+#        password: root
+#        driverClassName: oracle.jdbc.OracleDriver
+#        type: com.zaxxer.hikari.HikariDataSource
+#        minimum-idle: 5
+#        maximum-pool-size: 15
+#        max-lifetime: 1800000
+#        idle-timeout: 30000
+#        connection-timeout: 30000
+#        pool-name: HikariDataPoolOracle
+#        validation-query: select 'x' FROM DUAL
+
+
+#  jackson:
+#    default-property-inclusion: non_empty
+mybatis:
+  type-aliases-package: com.csair.fic.domain.pojo.mysql
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    dao: debug
+    org:
+      mybatis: debug
+
+PE:
+  service_url: http://10.108.71.11:8432/TravelSkySvc/remoting/checkIn.service
+  #service_url: http://10.72.160.118:9002/TravelSkySvc/remoting/checkIn.service
+  #service_url: http://10.79.8.134:8082/TravelSkySvc_TestL/remoting/checkIn.service
+BISE:
+  FIC:
+    service_url: localhost:9100/bise-shell
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 100000
+        read-timeout: 100000

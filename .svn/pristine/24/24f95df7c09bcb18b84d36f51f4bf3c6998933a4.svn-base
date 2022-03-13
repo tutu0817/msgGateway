@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL，
+              如果设置为WARN，则低于WARN的信息都不会输出 -->
+<!--
+说明：
+    1. 文件的命名和加载顺序有关
+       logback.xml早于application.yml加载，logback-spring.xml晚于application.yml加载
+                     如果logback配置需要使用application.yml中的属性，需要命名为logback-spring.xml
+    2. logback使用application.yml中的属性
+                     使用springProperty才可使用application.yml中的值 可以设置默认值
+-->
+<!--
+configuration属性：
+  scan：当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
+  scanPeriod：设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒；当scan为true时，此属性生效。默认的时间间隔为1分钟。
+  debug：当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
+-->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="http://www.padual.com/java/logback.xsd"
+               debug="false" scan="true" scanPeriod="10 second">
+
+    <!-- 动态日志级别 -->
+    <jmxConfigurator />
+
+    <!-- 读取外部property配置 -->
+    <!-- <property resource="logback.properties" /> -->
+    <!-- <property resource="logback.yml" /> -->
+
+    <!-- 从springboot的配置文件读取配置 -->
+    <!--  -->
+    <springProperty scope="context" name="logback.output.dir" source="logging.path" defaultValue=":/data/logs/dcs"/>
+    <!-- 系统标识，参照IT运营管理平台上的子产品代码 -->
+    <springProperty scope="context" name="jf.aun" source="csair.application.appname" defaultValue="FIC"/>
+    <!-- 模块标识，项目组自定义 -->
+    <springProperty scope="context" name="jf.mun" source="csair.application.modulename" defaultValue="dcsCenter"/>
+
+
+
+    <!--
+            日志输出格式：
+             %d表示日期时间，
+             %t/%thread表示线程名，
+             %-5level：级别从左显示5个字符宽度
+             %logger{50} 表示logger名字最长50个字符，否则按照句点分割。
+             %msg/%m：日志消息，
+             %n是换行符，
+             %p表示输出优先级，即DEBUG,INFO,WARN,ERROR,FATAL
+             %c表示输出日志讯息所属的类的全名
+             %l:输出日志事件的发生位置（行数）
+        -->
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <!-- Save output columns for console width -->
+            <!--         <pattern>[Console]%-5.5p|%d{MM-dd HH:mm:ss.SSS}|[%-15.15t]|%m%n</pattern> -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} -%5p ${PID:-} [%15.15t] %-40.40logger{39}: %m%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="Service" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!-- More details but fixed width prefix for file logging -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} -%5p ${PID:-} [%15.15t] %-40.40logger{39}: %m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <file>${logback.output.dir}/service/service.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${logback.output.dir}/service/service.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>366</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>300MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+        </rollingPolicy>
+    </appender>
+
+    <!--
+		logger主要用于存放日志对象，也可以定义日志类型、级别
+		name：表示匹配的logger类型前缀，也就是包的前半部分
+		level：要记录的日志级别，包括 TRACE < DEBUG < INFO < WARN < ERROR
+		additivity：作用在于children-logger是否使用 rootLogger配置的appender进行输出，
+		false：表示只用当前logger的appender-ref，true：
+		表示当前logger的appender-ref和rootLogger的appender-ref都有效
+    -->
+
+    <appender name="billing" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!-- Source code level details on exceptions -->
+            <pattern>JF|%d{yyyy-MM-dd HH:mm:ss.SSS Z}|${jf.aun}|${jf.mun}|%m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <file>${logback.output.dir}/bill/billing_s.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--  启用压缩 -->
+            <fileNamePattern>${logback.output.dir}/bill/billing_s.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <!--   测试用，
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+               <maxFileSize>${logback.max.filesize:-50MB}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+             -->
+            <maxHistory>366</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <append>true</append>
+        <!-- 控制输出的日志级别是大于或等于此级别的日志信息-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <logger name="billing_log" level="INFO" >
+        <appender-ref ref="billing"/>
+    </logger>
+
+
+    <!--  logger改在yml中定义
+    <logger name="com.csair" level="INFO" />
+    <logger name="org.apache.zookeeper" level="WARN" />
+    <logger name="com.alibaba.dubbo.monitor.dubbo.DubboMonitor" level="WARN" />
+    <logger name="com.ibatis" level="DEBUG" />
+    <logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG" />
+    <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" />
+    <logger name="java.sql.Connection" level="DEBUG" />
+    <logger name="java.sql.Statement" level="DEBUG" />
+    <logger name="java.sql.PreparedStatement" level="DEBUG" />
+	 -->
+
+    <root level="INFO">
+        <appender-ref ref="Console" />
+        <appender-ref ref="Service" />
+    </root>
+
+</configuration>

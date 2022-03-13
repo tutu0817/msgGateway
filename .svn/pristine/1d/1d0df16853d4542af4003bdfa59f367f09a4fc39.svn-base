@@ -1,0 +1,50 @@
+package com.csair.fic.domain.pojo;
+
+import lombok.Data;
+
+import java.util.Date;
+
+/**
+ * @Author: ZGX
+ * @Date: 2022/02/25/10:03
+ */
+@Data
+public class BdPsgInfo {
+    /**
+     * 航班id
+     */
+    private Integer fltId;
+    /**
+     * 旅客名字
+     */
+    private String name;
+    /**
+     * 始发站
+     */
+    private String origin;
+    /**
+     * 终点站
+     */
+    private String destination;
+    /**
+     * 证件（加密）
+     */
+    private String foid_nonet;
+    /**
+     * 航班号
+     */
+    private String airlcode;
+    private String fltNo;
+    /**
+     * 航班日期
+     */
+    private Date fltDate;
+    /**
+     * 旅客票号
+     */
+    private String efmn;
+    /**
+     * 状态
+     */
+    private String status;
+}

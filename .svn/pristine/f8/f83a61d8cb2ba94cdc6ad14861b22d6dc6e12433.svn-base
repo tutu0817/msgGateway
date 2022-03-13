@@ -1,0 +1,142 @@
+package com.csair.fic.pojo.mysql.pojo;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * sec_passenger_t2
+ * @author 
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SecPassengerT2 implements Serializable {
+    private Integer passengerid;
+
+    /**
+     * 航班号
+     */
+    private String flightno;
+
+    /**
+     * 航班日期
+     */
+    @DateTimeFormat(pattern = "yyyymmdd")
+    @JsonFormat(pattern = "yyyymmdd",timezone="GMT+8")
+    private String flightdate;
+
+    /**
+     * 英文名
+     */
+    private String enname;
+
+    /**
+     * 中文名
+     */
+    private String cnname;
+
+    /**
+     * 国籍
+     */
+    private String nationality;
+
+    /**
+     * 登机序号
+     */
+    private Integer boardno;
+
+    /**
+     * 座位号
+     */
+    private String seatno;
+
+    /**
+     * 航站
+     */
+    private String origin;
+
+    /**
+     * 证件类型护照
+		S：身份证
+		J：军官证
+		W：外交证
+     */
+    private String certtype;
+
+    /**
+     * 证件号
+     */
+    private String certid;
+
+    /**
+     * 安检时间
+     */
+    @DateTimeFormat(pattern = "yyyymmdd")
+    @JsonFormat(pattern = "yyyymmdd",timezone="GMT+8")
+    private Date checktime;
+
+    /**
+     * 安检结果
+	 * 	Y：安检通过
+		S：安检不通过
+		C：取消安检
+		N：未安检
+     */
+    private String checkresult;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 安检通道号
+     */
+    private String passageno;
+
+    /**
+     * 安检口（基本上与通道号一致）
+     */
+    private String checkgate;
+
+    /**
+     * 安检照片FTP地址
+     */
+    private String photopath;
+
+    /**
+     * 入库时间
+     */
+    @DateTimeFormat(pattern = "yyyymmdd")
+    @JsonFormat(pattern = "yyyymmdd",timezone="GMT+8")
+    private Date createtime;
+
+    /**
+     * 标识某台服务器是否下载过此旅客头像
+     */
+    private Date downloadTime;
+
+    /**
+     * -1下载成功，0还未下载，1第一次下载，2第二次下载，第三次下载
+     */
+    private Integer downloadResult;
+
+    /**
+     * N未注册，S注册成功，I注册接口出错 ，Q图片质量检测不合格
+     */
+    private String register;
+
+    /**
+     * 注册渠道 SEC/SVC/HR 或者大数据平台BSEC/BSVC/BHR意思是大数据平台返回的是对应的数据
+     */
+    private String source;
+
+    private static final long serialVersionUID = 1L;
+}

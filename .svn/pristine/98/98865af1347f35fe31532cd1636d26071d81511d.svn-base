@@ -1,0 +1,12 @@
+package com.csair.fic.common.constant;
+
+/**
+ * @Author: ZGX
+ * @Date: 2022/02/28/10:46
+ */
+public class ServiceConstant {
+    /**
+     * 南阳离港登机口微服务
+     */
+    public static final String BISE_SHELL_SERVICE = "bise-shell";
+}

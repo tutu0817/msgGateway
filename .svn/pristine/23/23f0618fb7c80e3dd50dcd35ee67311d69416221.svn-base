@@ -1,0 +1,47 @@
+package com.csair.fic.domain.vo;
+
+import lombok.Data;
+
+/**
+ * @Author: ZGX
+ * @Date: 2022/02/25/10:01
+ */
+@Data
+public class BdPsgVo {
+    /**
+     * 航班号
+     */
+    private String fltNr;
+    /**
+     * 航班日期：yyyyMMdd
+     */
+    private String fltDate;
+    /**
+     * 出发站三字码
+     */
+    private String origin;
+    /**
+     * 到达站三字码
+     */
+    private String destination;
+    /**
+     * 姓名
+     */
+    private String name;
+    /**
+     * 证件类型（NI身份证 PP护照）
+     */
+    private String certType;
+    /**
+     * 证件号（加密提供，相关解密方法会同步提供）
+     */
+    private String certId;
+    /**
+     * 客票号
+     */
+    private String ticketNo;
+    /**
+     * 是否登机（Y已登机 N未登机）
+     */
+    private String isBoarding;
+}

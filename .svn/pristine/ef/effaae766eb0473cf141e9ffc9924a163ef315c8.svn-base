@@ -1,0 +1,19 @@
+package com.csair.fic.service.oracle;
+
+
+
+import com.csair.fic.pojo.oracle.pojo.SecPassengerT2;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ */
+public interface SecPassengerT2OracleService {
+
+    List<Map<String, Object>> queryOracle(Map<String, Object> params);
+
+    List<SecPassengerT2> findAll();
+
+}

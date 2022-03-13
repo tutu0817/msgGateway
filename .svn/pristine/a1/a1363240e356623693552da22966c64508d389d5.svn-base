@@ -1,0 +1,102 @@
+package com.csair.fic.domain.response;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * @author ：wangxianlin
+ * @date ：Created in 2020/6/2 17:27
+ * @description：数据写入接口结果封装
+ * @version: 1.0$
+ */
+public class FicResponse<T> implements Serializable {
+
+    private static final long serialVersionUID = -3907394865728479018L;
+
+    private String ficResponseCode;
+
+    private String ficResponseMessage;
+
+    private List<T> ficResultList;
+    
+    private T ficResult;
+
+    public FicResponse() {
+
+    }
+
+    public FicResponse(FicResponseException e) {
+        ficResponseCode = e.getCode();
+        ficResponseMessage = e.getMessage();
+    }
+
+    public FicResponse(FicResponseCode ficResponseCode) {
+        this.ficResponseCode = ficResponseCode.getCode();
+        this.ficResponseMessage = ficResponseCode.getMsg();
+    }
+
+    public FicResponse(FicResponseCode ficResponseCode, String errorMsg) {
+        this.ficResponseCode = ficResponseCode.getCode();
+        this.ficResponseMessage = ficResponseCode.getMsg()+errorMsg;
+    }
+
+    public FicResponse(FicResponseCode ficResponseCode, List<T> ficResultList) {
+        this.ficResponseCode = ficResponseCode.getCode();
+        this.ficResponseMessage = ficResponseCode.getMsg();
+        this.ficResultList = ficResultList;
+    }
+    
+    public FicResponse(FicResponseCode ficResponseCode, T ficResult) {
+        this.ficResponseCode = ficResponseCode.getCode();
+        this.ficResponseMessage = ficResponseCode.getMsg();
+        this.setFicResult(ficResult);
+    }
+
+    public FicResponse(String code,String msg,List<T> ficResultList) {
+        this.ficResponseCode = code;
+        this.ficResponseMessage = msg;
+        this.ficResultList = ficResultList;
+    }
+
+    public String getFicResponseCode() {
+        return ficResponseCode;
+    }
+
+    public void setFicResponseCode(String ficResponseCode) {
+        this.ficResponseCode = ficResponseCode;
+    }
+
+    public String getFicResponseMessage() {
+        return ficResponseMessage;
+    }
+
+    public void setFicResponseMessage(String ficResponseMessage) {
+        this.ficResponseMessage = ficResponseMessage;
+    }
+
+    public List<T> getFicResultList() {
+        return ficResultList;
+    }
+
+    public void setFicResultList(List<T> ficResultList) {
+        this.ficResultList = ficResultList;
+    }
+
+    public T getFicResult() {
+        return ficResult;
+    }
+
+    public void setFicResult(T ficResult) {
+        this.ficResult = ficResult;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("ficResponseCode", ficResponseCode)
+                .append("ficResponseMessage", ficResponseMessage)
+                .toString();
+    }
+}

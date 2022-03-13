@@ -1,0 +1,28 @@
+package com.csair.fic;
+
+import com.csair.fic.config.ds.DS;
+import com.csair.fic.domain.pojo.oracle.SecPassengerT2;
+import com.csair.fic.service.SecPassengerT2Service;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class OracleDemo {
+
+    @Autowired
+    private SecPassengerT2Service secPassengerT2Service;
+
+    @Test
+    @DS
+    public void findAll(){
+        List<SecPassengerT2> result =
+                secPassengerT2Service.findAllFromOracle();
+        result.forEach(System.out::println);
+    }
+}

@@ -1,0 +1,27 @@
+server:
+  port: 8902
+spring:
+  application:
+    name: dcsCenter
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.72.160.20:8848,10.72.160.21:8848,10.72.160.22:8848
+        group: fic
+        namespace: e37ace26-d931-44dd-86ab-fc7a86c05940
+      config:
+        server-addr: 10.72.160.20:8848,10.72.160.21:8848,10.72.160.22:8848
+        prefix: ${spring.application.name}
+        file-extension: yaml
+        group: fic
+        namespace: e37ace26-d931-44dd-86ab-fc7a86c05940
+banner:
+  charset: UTF-8
+dubbo:
+  application:
+    name: dcs-consumer
+  registry:
+    protocol: zookeeper
+    address: 10.79.8.122:2190,10.79.8.122:2191,10.79.8.122:2192

@@ -1,0 +1,86 @@
+package com.csair.fic.controller;
+
+import com.csair.fic.common.util.DateTimeUtil;
+import com.csair.fic.domain.response.FicResponse;
+import com.csair.fic.domain.response.FicResponseCode;
+import com.csair.fic.domain.pojo.oracle.SecPassengerT2;
+import com.csair.fic.service.SecPassengerT2Service;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 安全检查数据统计控制器
+ * @author
+ */
+@Slf4j
+@RestController
+public class SecurityCheckController {
+
+    @Autowired
+    private SecPassengerT2Service secPassengerT2Service;
+
+    /**
+     * 南航智行获取南航安检系统的航班已过安检旅客数量(大兴）
+     */
+    @RequestMapping(value = "/queryPKXSecCount", method = RequestMethod.POST)
+    public FicResponse<List<Map<String, Object>>> queryPKXDataCount(@RequestBody Map<String, Object> params) {
+        // 效验必填参数非空、时间格式
+        if (ObjectUtils.isEmpty(params.get("schDepDtFrom"))) {
+            log.info("入参schDepDtFrom为空，请检查参数");
+            throw new RuntimeException("入参schDepDtFrom为空，请检查参数");
+        } else {
+            String schDepDtFrom = params.get("schDepDtFrom").toString();
+            schDepDtFrom = DateTimeUtil.strTostr(schDepDtFrom);
+            params.put("schDepDtFrom", schDepDtFrom);
+        }
+
+        if (ObjectUtils.isEmpty(params.get("schDepDtTo"))) {
+            log.info("入参schDepDtTo为空，请检查参数");
+            throw new RuntimeException("入参schDepDtFrom为空，请检查参数");
+
+        } else {
+            String schDepDtTo = params.get("schDepDtTo").toString();
+            schDepDtTo = DateTimeUtil.strTostr(schDepDtTo);
+            params.put("schDepDtTo", schDepDtTo);
+        }
+        return new FicResponse(FicResponseCode.CALL_SUCCESS, secPassengerT2Service.queryPKXSecCount(params));
+    }
+
+    /**
+     * 南航智行获取南航安检系统的航班已过安检旅客数量(广州）
+     */
+    @RequestMapping(value = "/queryCANSecCount", method = RequestMethod.POST)
+    public FicResponse<List<Map<String, Object>>> queryCANDataCount(@RequestBody Map<String, Object> params) {
+        // 效验必填参数非空、时间格式
+        if (ObjectUtils.isEmpty(params.get("schDepDtFrom"))) {
+            log.info("入参schDepDtFrom为空，请检查参数");
+            throw new RuntimeException("入参schDepDtFrom为空，请检查参数");
+        } else {
+            String schDepDtFrom = params.get("schDepDtFrom").toString();
+            schDepDtFrom = DateTimeUtil.strTostr(schDepDtFrom);
+            params.put("schDepDtFrom", schDepDtFrom);
+        }
+
+        if (ObjectUtils.isEmpty(params.get("schDepDtTo"))) {
+            log.info("入参schDepDtTo为空，请检查参数");
+            throw new RuntimeException("入参schDepDtFrom为空，请检查参数");
+
+        } else {
+            String schDepDtTo = params.get("schDepDtTo").toString();
+            schDepDtTo = DateTimeUtil.strTostr(schDepDtTo);
+            params.put("schDepDtTo", schDepDtTo);
+        }
+        return new FicResponse(FicResponseCode.CALL_SUCCESS, secPassengerT2Service.queryCANSecCount(params));
+    }
+
+    @GetMapping("/findAll")
+    public List<SecPassengerT2> findAll(){
+        List<SecPassengerT2> result = secPassengerT2Service.findAllFromOracle();
+        return result;
+    }
+}

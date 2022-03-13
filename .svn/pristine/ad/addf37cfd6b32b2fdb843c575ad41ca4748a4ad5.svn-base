@@ -1,0 +1,28 @@
+package com.csair.fic.service.mysql.impl;
+
+import com.csair.fic.dao.mysql.dao.SecPassengerT2Dao;
+import com.csair.fic.service.mysql.SecPassengerT2MysqlService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+*
+*/
+@Service("SecPassengerT2MysqlService")
+public class SecPassengerT2MysqlServiceImpl implements SecPassengerT2MysqlService {
+
+    @Autowired(required = false)
+    private SecPassengerT2Dao secPassengerT2Dao;
+
+
+    @Override
+    public List<Map<String, Object>> queryDataCount(Map<String, Object> params) {
+        return secPassengerT2Dao.queryDataCount(params);
+    }
+
+
+}

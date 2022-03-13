@@ -1,0 +1,76 @@
+package com.csair.fic.service.impl;
+
+import com.csair.fic.common.util.DateTimeUtil;
+import com.csair.fic.config.ds.DS;
+import com.csair.fic.mapper.SecPassengerT2Mapper;
+import com.csair.fic.domain.pojo.oracle.SecPassengerT2;
+import com.csair.fic.service.SecPassengerT2Service;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 实现类
+ */
+@Slf4j
+@Service
+public class SecPassengerT2ServiceImpl implements SecPassengerT2Service {
+
+    @Autowired
+    private SecPassengerT2Mapper secPassengerT2Mapper;
+
+    private List<Map<String, Object>> secMapList = null;
+
+    /**
+     * 南航智行获取南航安检系统的航班已过安检旅客数量(大兴）
+     */
+    @DS("db2")
+    @Override
+    public List<Map<String, Object>> queryPKXSecCount(Map<String, Object> params) {
+        try {
+            secMapList = secPassengerT2Mapper.queryPKXSecCount(params);
+            if(secMapList != null && secMapList.size()>0) {
+                for(int i=0;i<secMapList.size();i++) {
+                    Map<String, Object> secMap = secMapList.get(i);
+                    String schDepDtTo = secMap.get("schDepDt").toString();
+                    String schDepDt = DateTimeUtil.strTostrDate(schDepDtTo);
+                    secMap.put("schDepDt", schDepDt);
+                }
+            }
+        }catch(Exception e) {
+            log.error("查询安检数据出错。",e);
+        }
+        return secMapList;
+    }
+
+    /**
+     * 南航智行获取南航安检系统的航班已过安检旅客数量(广州）
+     */
+    @DS
+    @Override
+    public List<Map<String, Object>> queryCANSecCount(Map<String, Object> params) {
+        try {
+            secMapList = secPassengerT2Mapper.queryCANSecCount(params);
+            if(secMapList != null && secMapList.size()>0) {
+                for(int i=0;i<secMapList.size();i++) {
+                    Map<String, Object> secMap = secMapList.get(i);
+                    String schDepDtTo = secMap.get("schDepDt").toString();
+                    String schDepDt = DateTimeUtil.strTostrDate(schDepDtTo);
+                    secMap.put("schDepDt", schDepDt);
+                }
+            }
+        }catch(Exception e) {
+            log.error("查询安检数据出错。",e);
+        }
+        return secMapList;
+    }
+
+    @DS
+    @Override
+    public List<SecPassengerT2> findAllFromOracle() {
+        return secPassengerT2Mapper.findAllFromOracle();
+    }
+}

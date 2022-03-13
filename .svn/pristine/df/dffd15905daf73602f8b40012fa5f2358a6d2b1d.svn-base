@@ -1,0 +1,22 @@
+package com.csair.fic.service;
+
+import com.csair.fic.domain.pojo.oracle.SecPassengerT2;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 接口类
+ */
+public interface SecPassengerT2Service {
+
+    /**
+     * 南航智行获取南航安检系统的航班已过安检旅客数量
+     * @param params
+     * @return
+     */
+    List<Map<String, Object>> queryPKXSecCount(Map<String, Object> params);
+    List<Map<String, Object>> queryCANSecCount(Map<String, Object> params);
+
+    List<SecPassengerT2> findAllFromOracle();
+}

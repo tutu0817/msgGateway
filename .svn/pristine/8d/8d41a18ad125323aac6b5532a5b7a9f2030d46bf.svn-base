@@ -1,0 +1,58 @@
+package com.csair.fic.domain.response;
+
+/**
+ * @author ：wangxianlin
+ * @date ：Created in 2020/6/2 18:02
+ * @description：航班中心web请求状态码
+ * @version: 1.0$
+ */
+public enum FicResponseCode {
+    CALL_SUCCESS("01","接口调用成功！"),
+    PARAMETER_VERIFICATION_ERROR("02","请求参数不合法！"),
+    CALL_FAIL("03","接口调用失败！"),
+    NO_AUTHORIZATION("04", "无此接口权限！"),
+    NO_USER_PASS("05", "用户名或密码错误!"),
+    NO_IP_ADDRESS("06","IP不在白名单中！"),
+    OUT_OF_FREQUENCY("07","超出接口调用频率限制！");
+
+    FicResponseCode(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
+    public static String getCodeInfo(String code) {
+        for (FicResponseCode info : FicResponseCode.values()) {
+            if (code.equals(info.getCode())) {
+                return info.getMsg();
+            }
+        }
+        return "其他错误";
+    }
+
+    private String code;
+    private String msg;
+
+    @Override
+    public String toString() {
+        return "FicWebApplicationCodeEum{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                '}';
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+}

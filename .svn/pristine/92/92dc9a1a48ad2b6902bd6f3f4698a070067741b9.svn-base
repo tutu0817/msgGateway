@@ -1,0 +1,26 @@
+package com.csair.fic.config;
+
+import com.travelsky.hub.svc.ICheckInService;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
+
+/**
+ * PE接口 配置类
+ */
+@Data
+@Configuration
+public class PEInterfaceConfig {
+    @Value("${PE.service_url}")
+    private String serviceUrl;
+
+    @Bean(name = "peCheckInService")
+    public HttpInvokerProxyFactoryBean peCheckInService() {
+        HttpInvokerProxyFactoryBean bean=new HttpInvokerProxyFactoryBean();
+        bean.setServiceUrl(serviceUrl);
+        bean.setServiceInterface(ICheckInService.class);
+        return bean;
+    }
+}

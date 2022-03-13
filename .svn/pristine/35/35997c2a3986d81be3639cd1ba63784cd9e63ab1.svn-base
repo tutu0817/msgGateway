@@ -1,0 +1,134 @@
+package com.csair.fic.common.util;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * @ClassName: ApiHttpUtils
+ * @Description: api网关获取http信息工具类
+ * @author: Benson
+ * @date: 2020/10/13 9:21
+ */
+public class ApiHttpUtils {
+
+
+    private static final String CA_CLOUD_MARKET_INSTANCE_ID ="CA-CLOUD-MARKET-INSTANCE-ID";
+
+    private static final String CA_HTTP_SCHEMA = "CA-HTTP-SCHEMA";
+
+    private static final String CA_REQUEST_HANDLE_TIME = "CA-REQUEST-HANDLE-TIME";
+
+    private static final String CA_DOMAIN = "CA-DOMAIN";
+
+    private static final String CA_CLIENT_UA = "CA-CLIENT-UA";
+
+    private static final String CA_API_NAME = "CA-API-NAME";
+
+    private static final String CA_REQUEST_ID = "CA-REQUEST-ID";
+
+    private static final String CA_CLIENT_IP = "CA-CLIENT-IP";
+
+    private static final String CA_APP_ID = "CA-APP-ID";
+
+
+    /**
+     * @desription: 获取api系统参数 ConsumerAppId
+     * @param  request http请求对象
+     * @return 
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaAppID(HttpServletRequest request) {
+       return request.getHeader(CA_APP_ID);
+    }
+
+
+
+
+    /**
+     * @desription: 获取api系统参数 ClientIP
+     * @param  request http请求对象
+     * @return
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaClientIp(HttpServletRequest request) {
+        return request.getHeader(CA_CLIENT_IP);
+    }
+
+    /**
+     * @desription: 获取api系统参数  Api Name
+     * @param  request http请求对象
+     * @return
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaApiName(HttpServletRequest request) {
+        return request.getHeader(CA_API_NAME);
+    }
+
+    /**
+     * @desription: 获取api系统参数 RequestId
+     * @param  request http请求对象
+     * @return
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaRequestId(HttpServletRequest request) {
+        return request.getHeader(CA_REQUEST_ID);
+    }
+
+    /**
+     * @desription: 获取api系统参数 client User-Agent
+     * @param  request http请求对象
+     * @return
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaClientUa(HttpServletRequest request) {
+        return request.getHeader(CA_CLIENT_UA);
+    }
+
+    /**
+     * @desription: 获取api系统参数 Request domain name
+     * @param  request http请求对象
+     * @return
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaDomain(HttpServletRequest request) {
+        return request.getHeader(CA_DOMAIN);
+    }
+
+    /**
+     * @desription: 获取api系统参数 Request time (GMT)
+     * @param  request http请求对象
+     * @return
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaRequestHandleTime(HttpServletRequest request) {
+        return request.getHeader(CA_REQUEST_HANDLE_TIME);
+    }
+
+    /**
+     * @desription: 获取api系统参数 Http Schema
+     * @param  request http请求对象
+     * @return
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaHttpSchema(HttpServletRequest request) {
+        return request.getHeader(CA_HTTP_SCHEMA);
+    }
+
+    /**
+     * @desription: 获取api系统参数 Instance ID of cloud market commodity, the value is returned orderBizId of the production interface
+     * @param  request http请求对象
+     * @return
+     * @author Benson
+     * @date 2020/10/13 9:32
+     **/
+    public static String getCaCloudMarketInstanceId(HttpServletRequest request) {
+        return request.getHeader(CA_CLOUD_MARKET_INSTANCE_ID);
+    }
+}

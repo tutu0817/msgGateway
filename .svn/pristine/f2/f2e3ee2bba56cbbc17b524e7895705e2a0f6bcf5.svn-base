@@ -1,0 +1,20 @@
+package com.csair.fic.dao.mysql.dao;
+
+import com.csair.fic.pojo.mysql.pojo.SecPassengerT2;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
+
+@Repository
+//@Mapper
+public interface SecPassengerT2Dao {
+//    int insert(SecPassengerT2 record);
+//
+//    int insertSelective(SecPassengerT2 record);
+
+    List<Map<String, Object>> queryDataCount(Map<String, Object> params);
+
+    List<SecPassengerT2> findAll();
+}

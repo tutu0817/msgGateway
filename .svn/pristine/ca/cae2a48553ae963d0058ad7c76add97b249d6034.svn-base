@@ -1,0 +1,13 @@
+package com.csair.fic.service.oracle;
+
+import com.travelsky.hub.model.input.SeatChartQueryBean;
+import com.travelsky.hub.model.output.SeatChartResultBean;
+
+/**
+ * @Author: zhougx
+ * @Date: 2021/12/02/9:28
+ */
+public interface SeatChartService {
+
+    SeatChartResultBean querySeatChart(SeatChartQueryBean bean);
+}

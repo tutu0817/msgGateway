@@ -1,0 +1,46 @@
+package com.csair.fic.service.oracle.impl;
+
+import com.csair.fic.common.util.DateTimeUtil;
+import com.csair.fic.dao.oracle.mapper.SecPassengerT2Mapper;
+import com.csair.fic.pojo.oracle.pojo.SecPassengerT2;
+import com.csair.fic.service.oracle.SecPassengerT2OracleService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ */
+@Slf4j
+@Service("SecPassengerT2OracleService")
+public class SecPassengerT2OracleServiceImpl implements SecPassengerT2OracleService {
+	@Autowired
+	private SecPassengerT2Mapper secPassengerT2Mapper;
+
+
+	@Override
+	public List<Map<String, Object>> queryOracle(Map<String, Object> params) {
+		List<Map<String, Object>> secMapList = null;
+		try {
+			secMapList = secPassengerT2Mapper.queryOracle(params);
+			if(secMapList != null && secMapList.size()>0) {
+				for(int i=0;i<secMapList.size();i++) {
+					Map<String, Object> secMap = secMapList.get(i);
+					String schDepDtTo = secMap.get("schDepDt").toString();
+					String schDepDt = DateTimeUtil.strTostrDate(schDepDtTo);
+					secMap.put("schDepDt", schDepDt);
+				}
+			}
+		}catch(Exception e) {
+			log.error("查询安检数据出错。",e);
+		}
+		return secMapList;
+	}
+
+	@Override
+	public List<SecPassengerT2> findAll() {
+		return secPassengerT2Mapper.findAll();
+	}
+}

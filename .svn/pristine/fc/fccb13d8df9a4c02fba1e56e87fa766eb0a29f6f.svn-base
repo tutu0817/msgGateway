@@ -1,0 +1,61 @@
+package com.csair.fic.controller.oracle.controller;
+
+import com.csair.fic.common.util.DateTimeUtil;
+import com.csair.fic.controller.mysql.controller.SecurityCheckMysqlController;
+import com.csair.fic.domain.response.FicResponse;
+import com.csair.fic.domain.response.FicResponseCode;
+import com.csair.fic.service.oracle.SecPassengerT2OracleService;
+import com.csair.fic.service.oracle.impl.SecPassengerT2OracleServiceImpl;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 安全检查数据统计控制器
+ */
+@Slf4j
+@RestController
+public class SecurityCheckOracleController {
+    @Autowired
+    private SecPassengerT2OracleService secPassengerT2OracleService;
+    /**
+     * 南航智行获取南航安检系统的航班已过安检旅客数量
+     */
+    @RequestMapping(value = "/queryCANSecCount", method = RequestMethod.POST)
+    public FicResponse<List<Map<String, Object>>> queryDataCount(@RequestBody Map<String, Object> params) {
+        // 效验必填参数非空、时间格式
+        if (ObjectUtils.isEmpty(params.get("schDepDtFrom"))) {
+            log.info("入参schDepDtFrom为空，请检查参数");
+            throw new RuntimeException("入参schDepDtFrom为空，请检查参数");
+        }else {
+            String schDepDtFrom = params.get("schDepDtFrom").toString();
+            schDepDtFrom = DateTimeUtil.strTostr(schDepDtFrom);
+            params.put("schDepDtFrom", schDepDtFrom);
+        }
+
+        if (ObjectUtils.isEmpty(params.get("schDepDtTo"))) {
+            log.info("入参schDepDtTo为空，请检查参数");
+            throw new RuntimeException("入参schDepDtFrom为空，请检查参数");
+
+        }else {
+            String schDepDtTo = params.get("schDepDtTo").toString();
+            schDepDtTo = DateTimeUtil.strTostr(schDepDtTo);
+            params.put("schDepDtTo", schDepDtTo);
+        }
+
+        return new FicResponse(FicResponseCode.CALL_SUCCESS, secPassengerT2OracleService.queryOracle(params));
+
+    }
+
+
+}
